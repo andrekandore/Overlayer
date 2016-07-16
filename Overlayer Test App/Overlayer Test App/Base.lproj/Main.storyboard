@@ -366,7 +366,7 @@
                                     <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                 </textAttributes>
                                 <items>
-                                    <navigationItem title="Tap or Drag" id="xKi-Vb-hLx"/>
+                                    <navigationItem title="Drag to Open" id="xKi-Vb-hLx"/>
                                 </items>
                                 <connections>
                                     <outletCollection property="gestureRecognizers" destination="Rni-kU-3vq" appends="YES" id="lYE-xT-QBe"/>
@@ -655,6 +655,6 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="nbJ-vF-uF7"/>
+        <segue reference="bX6-NH-0d3"/>
     </inferredMetricsTieBreakers>
 </document>
