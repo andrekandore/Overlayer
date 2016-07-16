@@ -4,4 +4,7 @@
    <FileRef
       location = "group:Overlayer/Overlayer.xcodeproj">
    </FileRef>
+   <FileRef
+      location = "group:Overlayer Test App/Overlayer Test App.xcodeproj">
+   </FileRef>
 </Workspace>

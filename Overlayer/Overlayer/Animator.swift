@@ -120,10 +120,11 @@ extension Animator {
         let controllerKey : String = .Forwards == self.self.transistionDirection ? UITransitionContextToViewControllerKey : UITransitionContextFromViewControllerKey
         let viewKey : String = .Forwards == self.self.transistionDirection ? UITransitionContextToViewKey : UITransitionContextFromViewKey
         
-        guard let controller = context.viewControllerForKey(controllerKey), let view = context.viewForKey(viewKey), let containerView = context.containerView() else {
+        guard let controller = context.viewControllerForKey(controllerKey), let view = context.viewForKey(viewKey) else {
             return nil
         }
         
+        let containerView = context.containerView()
         let closedPositionFrame = self.frameOf(controller, beforeBeingPresentedIn:containerView ,with:context)
         let openedPositionFrame = context.finalFrameForViewController(controller)
         

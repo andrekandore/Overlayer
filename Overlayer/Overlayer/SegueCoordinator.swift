@@ -217,7 +217,7 @@ extension DraggableSegueCoordinator : UIViewControllerTransitioningDelegate {
         return nil
     }
     
-    public func presentationControllerForPresentedViewController(presented: UIViewController, presentingViewController presenting: UIViewController, sourceViewController source: UIViewController) -> UIPresentationController? {
+    public func presentationControllerForPresentedViewController(presented: UIViewController, presentingViewController presenting: UIViewController?, sourceViewController source: UIViewController) -> UIPresentationController? {
         
         guard case .Presenting(let segue) = self.state else  {
             return nil

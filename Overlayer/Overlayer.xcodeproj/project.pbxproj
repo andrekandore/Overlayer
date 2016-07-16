@@ -172,6 +172,9 @@
 				TargetAttributes = {
 					B303832E1CDF74CE0001BC52 = {
 						CreatedOnToolsVersion = 7.3.1;
+						DevelopmentTeam = KPBMY72PJU;
+						DevelopmentTeamName = "Andre Elder";
+						LastSwiftMigration = 0800;
 					};
 					B30383381CDF74CE0001BC52 = {
 						CreatedOnToolsVersion = 7.3.1;
@@ -358,6 +361,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 2.3;
 			};
 			name = Debug;
 		};
@@ -375,6 +379,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.andore.Overlayer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 2.3;
 			};
 			name = Release;
 		};
