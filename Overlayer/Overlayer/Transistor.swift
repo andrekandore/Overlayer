@@ -27,7 +27,7 @@ class Transistor : UIPercentDrivenInteractiveTransition, TransistorProtocol, Ove
         } set {}
     }
     
-    func handlePanGesture(recognizer:UIPanGestureRecognizer) {
+    func handlePanGesture(_ recognizer:UIPanGestureRecognizer) {
         
         var progress : CGFloat = 0.0
         
@@ -35,31 +35,31 @@ class Transistor : UIPercentDrivenInteractiveTransition, TransistorProtocol, Ove
             return
         }
         
-        let translation = recognizer.translationInView(view).y
+        let translation = recognizer.translation(in: view).y
         let containerHeight = CGFloat(containerView.bounds.size.height)
-        let movement = .Forwards == self.transistionDirection ? -translation : translation
+        let movement = .forwards == self.transistionDirection ? -translation : translation
         progress = movement / containerHeight
         progress = min(1.0, max(0.0, progress))
         
         debugPrint("Progress: \(progress)")
         
         switch recognizer.state {
-        case .Possible: fallthrough
-        case .Failed: fallthrough
-        case .Began:
+        case .possible: fallthrough
+        case .failed: fallthrough
+        case .began:
             self.interactiveTransitionActive = true
             self.recognitionBeganCallback()
             debugPrint("Began")
-        case .Changed:
-            self.updateInteractiveTransition(progress)
+        case .changed:
+            self.update(progress)
             debugPrint("Changed")
-        case .Ended: fallthrough
-        case .Cancelled:
+        case .ended: fallthrough
+        case .cancelled:
             self.interactiveTransitionActive = false
             if progress < interactionThreshold {
-                self.cancelInteractiveTransition()
+                self.cancel()
             } else {
-                self.finishInteractiveTransition()
+                self.finish()
             }
             debugPrint("Ended")
         }

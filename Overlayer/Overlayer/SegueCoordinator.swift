@@ -11,17 +11,17 @@ import UIKit
 
 public class DraggableSegueCoordinator : NSObject {
 
-    lazy var closeTransistor : TransistorObject = Transistor(recognitionBeganCallback:self.closeDraggableOverlayIfPossible, transistionDirection:.Backwards)
-    lazy var openTransistor : TransistorObject = Transistor(recognitionBeganCallback:self.openDraggableOverlayIfPossible, transistionDirection:.Forwards)
+    lazy var closeTransistor : TransistorObject = Transistor(recognitionBeganCallback:self.closeDraggableOverlayIfPossible, transistionDirection:.backwards)
+    lazy var openTransistor : TransistorObject = Transistor(recognitionBeganCallback:self.openDraggableOverlayIfPossible, transistionDirection:.forwards)
 
     var configuration : OverlayConfiguration = OverlayConfiguration()
     var observer : OverlayObservering?
 
-    private var _state : State = .Unintialized
+    private var _state : State = .unintialized
     enum State {
-        case Presentable(String,UIViewController)
-        case Presenting(UIStoryboardSegue)
-        case Unintialized
+        case presentable(String,UIViewController)
+        case presenting(UIStoryboardSegue)
+        case unintialized
     }
     
     var state : State {
@@ -88,11 +88,11 @@ extension DraggableSegueCoordinator {
         }
     }
 
-    @IBAction public func showDraggableOverlayView(sender : AnyObject) {
+    @IBAction public func showDraggableOverlayView(_ sender : AnyObject) {
         self.openDraggableOverlayIfPossible()
     }
     
-    @IBAction public func openRecognizerDidRecognize(recognizer:UIPanGestureRecognizer) {
+    @IBAction public func openRecognizerDidRecognize(_ recognizer:UIPanGestureRecognizer) {
         debugPrint(#function)
         self.openTransistor.handlePanGesture(recognizer)
     }
@@ -100,11 +100,11 @@ extension DraggableSegueCoordinator {
 
 //Public entry points to change state
 extension DraggableSegueCoordinator {
-    public func handle(segue: UIStoryboardSegue, sender: UIViewController, observer:OverlayObservering) -> Bool {
+    public func handle(_ segue: UIStoryboardSegue, sender: UIViewController, observer:OverlayObservering) -> Bool {
         
         if (self.makePresentingIfPossible(segue)) {
             segue.destinationViewController.modalPresentationCapturesStatusBarAppearance = true
-            segue.destinationViewController.modalPresentationStyle = .Custom;
+            segue.destinationViewController.modalPresentationStyle = .custom;
             segue.destinationViewController.transitioningDelegate = self
             self.observer = observer
         }
@@ -113,19 +113,19 @@ extension DraggableSegueCoordinator {
     }
     
     public func openDraggableOverlayIfPossible() {
-        if case .Presentable(let segueIdentier,let sourceDestinationViewController) = self.state {
-            sourceDestinationViewController.performSegueWithIdentifier(segueIdentier, sender: self)
+        if case .presentable(let segueIdentier,let sourceDestinationViewController) = self.state {
+            sourceDestinationViewController.performSegue(withIdentifier: segueIdentier, sender: self)
         }
     }
     
     public func closeDraggableOverlayIfPossible() {
-        if case .Presenting(let segue) = self.state {
-            segue.destinationViewController.dismissViewControllerAnimated(true, completion: nil)
+        if case .presenting(let segue) = self.state {
+            segue.destinationViewController.dismiss(animated: true, completion: nil)
         }
     }
     
     public func prepareToRelenquishSegueAfterDismissingOverlay() {
-        if case .Presenting(let segue) = self.state {
+        if case .presenting(let segue) = self.state {
             segue.destinationViewController.transitioningDelegate = nil
         }
     }
@@ -134,13 +134,13 @@ extension DraggableSegueCoordinator {
 private extension DraggableSegueCoordinator {
     
     func prepareDestinationViewControllerForSwipeDown() {
-        if case .Presenting(let segue) = self.state, let slideDownView = segue.destinationViewController.viewForDraggedDismissal {
+        if case .presenting(let segue) = self.state, let slideDownView = segue.destinationViewController.viewForDraggedDismissal {
             let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(self.closeRecognizerDidRecognize))
             slideDownView.addGestureRecognizer(panGestureRecognizer)
         }
     }
     
-    @objc @IBAction private func closeRecognizerDidRecognize(recognizer:UIPanGestureRecognizer) {
+    @objc @IBAction private func closeRecognizerDidRecognize(_ recognizer:UIPanGestureRecognizer) {
         self.closeTransistor.handlePanGesture(recognizer)
     }
 }
@@ -152,7 +152,7 @@ private extension DraggableSegueCoordinator {
         return self._state.makePresentableIfPossible(with:configuration)
     }
     
-    func makePresentingIfPossible(segue : UIStoryboardSegue?)  -> Bool {
+    func makePresentingIfPossible(_ segue : UIStoryboardSegue?)  -> Bool {
         return self._state.makePresentingIfPossible(segue)
     }
     
@@ -165,7 +165,7 @@ private extension DraggableSegueCoordinator {
 private extension DraggableSegueCoordinator.State {
     mutating func makePresentableIfPossible(with configuration:OverlayConfiguration)  -> Bool {
         
-        if case .Unintialized = self, case .Presenting(_) = self {
+        if case .unintialized = self, case .presenting(_) = self {
             return false
         }
         
@@ -173,28 +173,28 @@ private extension DraggableSegueCoordinator.State {
             return false
         }
         
-        self = .Presentable(segueID, source)
+        self = .presentable(segueID, source)
         return true
     }
     
-    mutating func makePresentingIfPossible(segue : UIStoryboardSegue?)  -> Bool {
+    mutating func makePresentingIfPossible(_ segue : UIStoryboardSegue?)  -> Bool {
         
-        guard case .Presentable(_,_) = self, let segue = segue else {
+        guard case .presentable(_,_) = self, let segue = segue else {
             return false
         }
         
-        self = .Presenting(segue)
+        self = .presenting(segue)
         return true
     }
     
     mutating func returnFromPresentingIfPossible(with configuration:OverlayConfiguration) -> Bool {
         
-        guard case .Presenting(_) = self else {
+        guard case .presenting(_) = self else {
             return false
         }
         
         guard self.makePresentableIfPossible(with: configuration) else {
-            self = .Unintialized
+            self = .unintialized
             return true
         }
         
@@ -205,32 +205,32 @@ private extension DraggableSegueCoordinator.State {
 
 extension DraggableSegueCoordinator : UIViewControllerTransitioningDelegate {
     
-    public func animationControllerForPresentedController( presented: UIViewController, presentingController presenting: UIViewController, sourceController source: UIViewController)
+    public func animationController( forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController)
         -> UIViewControllerAnimatedTransitioning? {        
-        return Animator(with: self.configuration, direction: .Forwards)
+        return Animator(with: self.configuration, direction: .forwards)
     }
     
-    public func interactionControllerForPresentation(animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
+    public func interactionControllerForPresentation(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
         if self.openTransistor.interactiveTransitionActive {
             return openTransistor
         }
         return nil
     }
     
-    public func presentationControllerForPresentedViewController(presented: UIViewController, presentingViewController presenting: UIViewController?, sourceViewController source: UIViewController) -> UIPresentationController? {
+    public func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
         
-        guard case .Presenting(let segue) = self.state else  {
+        guard case .presenting(let segue) = self.state else  {
             return nil
         }
         
         return Presenter(with: self.configuration, segue:segue, observer: self)
     }
 
-    public func animationControllerForDismissedController(dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        return Animator(with: self.configuration, direction: .Backwards)
+    public func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        return Animator(with: self.configuration, direction: .backwards)
     }
     
-    public func interactionControllerForDismissal(animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
+    public func interactionControllerForDismissal(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
         if self.closeTransistor.interactiveTransitionActive {
             return closeTransistor
         }
@@ -239,32 +239,32 @@ extension DraggableSegueCoordinator : UIViewControllerTransitioningDelegate {
 }
 
 extension DraggableSegueCoordinator : OverlayObservering {
-    public func willPresentViewControllerInOverlay(coordinator:DraggableSegueCoordinator?) {
+    public func willPresentViewControllerInOverlay(_ coordinator:DraggableSegueCoordinator?) {
         self.observer?.willPresentViewControllerInOverlay(self)
     }
     
-    public func didPresentViewControllerInOverlay(coordinator:DraggableSegueCoordinator?) {
+    public func didPresentViewControllerInOverlay(_ coordinator:DraggableSegueCoordinator?) {
         self.observer?.didPresentViewControllerInOverlay(self)
         self.prepareDestinationViewControllerForSwipeDown()
     }
     
-    public func willDismissViewControllerFromOverlay(coordinator:DraggableSegueCoordinator?) {
+    public func willDismissViewControllerFromOverlay(_ coordinator:DraggableSegueCoordinator?) {
         self.observer?.willDismissViewControllerFromOverlay(self)
     }
     
-    public func didDismissViewControllerFromOverlay(coordinator:DraggableSegueCoordinator?) {
+    public func didDismissViewControllerFromOverlay(_ coordinator:DraggableSegueCoordinator?) {
         self.prepareToRelenquishSegueAfterDismissingOverlay()
         self.returnFromPresentingIfPossible(with: self.configuration)
         self.observer?.didDismissViewControllerFromOverlay(self)
         self.observer = nil
     }
     
-    public func didCancelViewControllerPresentationInOverlay(coordinator: DraggableSegueCoordinator?) {
+    public func didCancelViewControllerPresentationInOverlay(_ coordinator: DraggableSegueCoordinator?) {
         self.returnFromPresentingIfPossible(with: self.configuration)
         self.observer?.didCancelViewControllerClosureInOverlay(self)
     }
     
-    public func didCancelViewControllerClosureInOverlay(coordinator: DraggableSegueCoordinator?) {
+    public func didCancelViewControllerClosureInOverlay(_ coordinator: DraggableSegueCoordinator?) {
         self.observer?.didCancelViewControllerClosureInOverlay(self)
     }
 }

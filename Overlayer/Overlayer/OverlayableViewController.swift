@@ -14,12 +14,12 @@ public class OverlayableViewController : UIViewController, OverlayObservering {
     @IBOutlet public var draggableOverlayCoordinators : [DraggableSegueCoordinator] = []
     @IBInspectable public var lightStatusBar : Bool = true
     
-    override public func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override public func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {
         let matchingSegues = self.matchingSeguesFilter(segue)
         self.draggableOverlayCoordinators.filter(matchingSegues).first?.handle(segue, sender: self, observer: self)
     }
     
-    func matchingSeguesFilter(segue:UIStoryboardSegue) ->  (DraggableSegueCoordinator) -> Bool {
+    func matchingSeguesFilter(_ segue:UIStoryboardSegue) ->  (DraggableSegueCoordinator) -> Bool {
         return { coordinator in
             if  let coordinatorIdentifier = coordinator.openSegueIdentifier,
                 let segueEdentifier = segue.identifier
@@ -32,9 +32,9 @@ public class OverlayableViewController : UIViewController, OverlayObservering {
     
     override public func preferredStatusBarStyle() -> UIStatusBarStyle {
         if true == self.lightStatusBar {
-            return UIStatusBarStyle.LightContent
+            return UIStatusBarStyle.lightContent
         } else {
-            return UIStatusBarStyle.Default
+            return UIStatusBarStyle.default
         }
     }
     
@@ -54,13 +54,13 @@ public class OverlayableViewController : UIViewController, OverlayObservering {
 }
 
 public protocol OverlayableViewControllerConvenience {
-    func unwindToPrevious(unwindSegue : UIStoryboardSegue)
+    func unwindToPrevious(_ unwindSegue : UIStoryboardSegue)
     var viewForDraggedDismissal : UIView? {get set}
 }
 
 //Convenience Extension for Presented View Controller to Faitiltate Unwinding and Unwind-Drag
 extension UIViewController : OverlayableViewControllerConvenience {
-    public func unwindToPrevious(unwindSegue : UIStoryboardSegue) {debugPrint(#function)}
+    public func unwindToPrevious(_ unwindSegue : UIStoryboardSegue) {debugPrint(#function)}
 
     public var viewForDraggedDismissal : UIView? {
         get {

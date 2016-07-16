@@ -15,32 +15,32 @@ import UIKit
 //MARK: Public Types
 //MARK: - Overlay Obervation Protocol
 public protocol OverlayObservering : class {
-    func didCancelViewControllerPresentationInOverlay(coordinator:DraggableSegueCoordinator?)
-    func didCancelViewControllerClosureInOverlay(coordinator:DraggableSegueCoordinator?)
+    func didCancelViewControllerPresentationInOverlay(_ coordinator:DraggableSegueCoordinator?)
+    func didCancelViewControllerClosureInOverlay(_ coordinator:DraggableSegueCoordinator?)
     
-    func willPresentViewControllerInOverlay(coordinator:DraggableSegueCoordinator?)
-    func didPresentViewControllerInOverlay(coordinator:DraggableSegueCoordinator?)
+    func willPresentViewControllerInOverlay(_ coordinator:DraggableSegueCoordinator?)
+    func didPresentViewControllerInOverlay(_ coordinator:DraggableSegueCoordinator?)
     
-    func willDismissViewControllerFromOverlay(coordinator:DraggableSegueCoordinator?)
-    func didDismissViewControllerFromOverlay(coordinator:DraggableSegueCoordinator?)
+    func willDismissViewControllerFromOverlay(_ coordinator:DraggableSegueCoordinator?)
+    func didDismissViewControllerFromOverlay(_ coordinator:DraggableSegueCoordinator?)
 }
 
 //MARK: - Overlay Obervation Default Implementation
 public extension OverlayObservering {
-    func didCancelViewControllerPresentationInOverlay(coordinator:DraggableSegueCoordinator?) {debugPrint(#function)}
-    func willPresentViewControllerInOverlay(coordinator:DraggableSegueCoordinator?) {debugPrint(#function)}
-    func didPresentViewControllerInOverlay(coordinator:DraggableSegueCoordinator?) {debugPrint(#function)}
+    func didCancelViewControllerPresentationInOverlay(_ coordinator:DraggableSegueCoordinator?) {debugPrint(#function)}
+    func willPresentViewControllerInOverlay(_ coordinator:DraggableSegueCoordinator?) {debugPrint(#function)}
+    func didPresentViewControllerInOverlay(_ coordinator:DraggableSegueCoordinator?) {debugPrint(#function)}
     
-    func didCancelViewControllerClosureInOverlay(coordinator:DraggableSegueCoordinator?) {debugPrint(#function)}
-    func willDismissViewControllerFromOverlay(coordinator:DraggableSegueCoordinator?) {debugPrint(#function)}
-    func didDismissViewControllerFromOverlay(coordinator:DraggableSegueCoordinator?) {debugPrint(#function)}
+    func didCancelViewControllerClosureInOverlay(_ coordinator:DraggableSegueCoordinator?) {debugPrint(#function)}
+    func willDismissViewControllerFromOverlay(_ coordinator:DraggableSegueCoordinator?) {debugPrint(#function)}
+    func didDismissViewControllerFromOverlay(_ coordinator:DraggableSegueCoordinator?) {debugPrint(#function)}
 }
 
 //Mark: Gesture Recognition
 //Used to Tie Gesture Recognizers on Outside to Inner Objects
 public protocol OverlayCoordinating : class {
-    func handlePanGesture(recognizer : UIPanGestureRecognizer)
-    func handleTapGesture(recognizer : UITapGestureRecognizer)
+    func handlePanGesture(_ recognizer : UIPanGestureRecognizer)
+    func handleTapGesture(_ recognizer : UITapGestureRecognizer)
 }
 
 //MARK: -
@@ -71,7 +71,7 @@ struct OverlayConfiguration : OverlayConfigurationProtocol {
     var fadeInPresentationAndFadeOutDismissal = false
     var zoomOutMultipier : CGFloat = -1.72
     
-    var transistionDirection = TransistionDirection.Forwards
+    var transistionDirection = TransistionDirection.forwards
     
     var sourceViewController : UIViewController?
     var openSegueIdentifier : String?
@@ -95,19 +95,19 @@ protocol TransistorProtocol {
 
 //Mark: Gesture Recognition Default Implementations
 extension OverlayCoordinating {
-    public func handlePanGesture(recognizer : UIPanGestureRecognizer) {debugPrint(#function)}
-    public func handleTapGesture(recognizer : UITapGestureRecognizer) {debugPrint(#function)}
+    public func handlePanGesture(_ recognizer : UIPanGestureRecognizer) {debugPrint(#function)}
+    public func handleTapGesture(_ recognizer : UITapGestureRecognizer) {debugPrint(#function)}
 }
 
 //Private Enums
 enum RecognizerDirection {
-    case Horizontal
-    case Vertical
+    case horizontal
+    case vertical
 }
 
 enum TransistionDirection {
-    case Forwards
-    case Backwards
+    case forwards
+    case backwards
 }
 
 //Private Typealiases
@@ -121,10 +121,10 @@ typealias VoidFunc = (Void) -> Void
 let ContainerViewBakgroundColor = UIColor.init(colorLiteralRed: 0.333, green: 0.358, blue: 0.364, alpha: 1.0)
 let OverlayColor = UIColor(colorLiteralRed: 0.005, green: 0.025, blue: 0.1, alpha: 0.18)
 
-let InteractiveLinearAnimationOptions : UIViewAnimationOptions = [.OverrideInheritedCurve,.CurveLinear]
-let EaseInEaseOutAnimationOptions : UIViewAnimationOptions = [.OverrideInheritedCurve,.CurveEaseInOut]
+let InteractiveLinearAnimationOptions : UIViewAnimationOptions = [.overrideInheritedCurve,.curveLinear]
+let EaseInEaseOutAnimationOptions : UIViewAnimationOptions = [.overrideInheritedCurve, .curveEaseInOut]
 
-let DefaultOverlayViewAnimationDuration : NSTimeInterval = 0.77
+let DefaultOverlayViewAnimationDuration : TimeInterval = 0.77
 
 let EmptyCompletionFunc : CompletionFunc = {_ in}
 let EmptyVoidFunc : VoidFunc = {}
@@ -138,21 +138,21 @@ let zDepthTransform : CATransform3D = {
 
 //MARK: - Private Extensions
 extension UIView {
-    static func bounce(duration: NSTimeInterval = DefaultOverlayViewAnimationDuration,animation:() -> Void, completion: ((Bool) -> Void)? = EmptyCompletionFunc) {
-        self.animateWithDuration(DefaultOverlayViewAnimationDuration, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 2.0, options: [], animations: animation, completion: completion)
+    static func bounce(_ duration: TimeInterval = DefaultOverlayViewAnimationDuration,animation:() -> Void, completion: ((Bool) -> Void)? = EmptyCompletionFunc) {
+        self.animate(withDuration: DefaultOverlayViewAnimationDuration, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 2.0, options: [], animations: animation, completion: completion)
     }
     
-    static func interactivelyAnimate(duration: NSTimeInterval = DefaultOverlayViewAnimationDuration,animation:() -> Void, completion: ((Bool) -> Void)? = EmptyCompletionFunc) {
-        self.animateWithDuration(duration, delay:0, options:InteractiveLinearAnimationOptions, animations:animation, completion:completion)
+    static func interactivelyAnimate(_ duration: TimeInterval = DefaultOverlayViewAnimationDuration,animation:() -> Void, completion: ((Bool) -> Void)? = EmptyCompletionFunc) {
+        self.animate(withDuration: duration, delay:0, options:InteractiveLinearAnimationOptions, animations:animation, completion:completion)
     }
     
-    static func animate(duration: NSTimeInterval = DefaultOverlayViewAnimationDuration,animation:() -> Void, completion: ((Bool) -> Void)? = EmptyCompletionFunc) {
-        self.animateWithDuration(duration, delay:0, options:EaseInEaseOutAnimationOptions, animations:animation, completion:completion)
+    static func animate(_ duration: TimeInterval = DefaultOverlayViewAnimationDuration,animation:() -> Void, completion: ((Bool) -> Void)? = EmptyCompletionFunc) {
+        self.animate(withDuration: duration, delay:0, options:EaseInEaseOutAnimationOptions, animations:animation, completion:completion)
     }
 }
 
 extension UIView {
-    func setBgColor(color:UIColor) -> UIView {
+    func setBgColor(_ color:UIColor) -> UIView {
         self.backgroundColor = color
         return self
     }
@@ -161,8 +161,8 @@ extension UIView {
 //Note: doesnt work for some UIView Subclasses such as UINavigationBar... in that case the view will not be able to be added to the view heirarchy...
 extension UIView {
     func archivedCopy() -> UIView? {
-        let archive = NSKeyedArchiver.archivedDataWithRootObject(self)
-        let unarchivedObject = NSKeyedUnarchiver.unarchiveObjectWithData(archive)
+        let archive = NSKeyedArchiver.archivedData(withRootObject: self)
+        let unarchivedObject = NSKeyedUnarchiver.unarchiveObject(with: archive)
         return unarchivedObject as? UIView
     }
 }

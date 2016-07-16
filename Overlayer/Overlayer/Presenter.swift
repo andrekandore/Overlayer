@@ -17,7 +17,7 @@ class Presenter : UIPresentationController {
     init(with configuration:OverlayConfigurationProtocol, segue:UIStoryboardSegue ,observer:OverlayObservering?) {
         self.configuration = configuration
         self.observer = observer
-        super.init(presentedViewController: segue.destinationViewController, presentingViewController: segue.sourceViewController)
+        super.init(presentedViewController: segue.destinationViewController, presenting: segue.sourceViewController)
     }
     
     override func presentationTransitionWillBegin() {
@@ -39,10 +39,10 @@ class Presenter : UIPresentationController {
             if self.configuration.overlayZoomsOutPresentingViewController {
                 
                 let scale = self.zoomOutScale(vars)
-                vars.parentView.transform = CGAffineTransformScale(vars.parentView.transform, scale, scale)
+                vars.parentView.transform = vars.parentView.transform.scaleBy(x: scale, y: scale)
                 
                 if self.configuration.zoomedOverlayTranslatesUpwardsProportionallyToTopMargin {
-                    vars.parentView.transform = CGAffineTransformTranslate(vars.parentView.transform, 0, -CGFloat(self.configuration.overlayTopMargin))
+                    vars.parentView.transform = vars.parentView.transform.translateBy(x: 0, y: -CGFloat(self.configuration.overlayTopMargin))
                 }
             }
         }
@@ -60,9 +60,9 @@ class Presenter : UIPresentationController {
             }
         }
         
-        vars.coordinator.animateAlongsideTransitionInView(vars.parentView, animation:zoomOutAnimation, completion: nil)
-        vars.coordinator.animateAlongsideTransition(overlayAnimation,completion:nil)
-        vars.coordinator.notifyWhenInteractionEndsUsingBlock(completionBlock)
+        vars.coordinator.animateAlongsideTransition(in: vars.parentView, animation:zoomOutAnimation, completion: nil)
+        vars.coordinator.animate(alongsideTransition: overlayAnimation,completion:nil)
+        vars.coordinator.notifyWhenInteractionEnds(completionBlock)
     }
     
     override func dismissalTransitionWillBegin() {
@@ -78,7 +78,7 @@ class Presenter : UIPresentationController {
         }
         
         let zoomBackInAnimation : CoordinatedTransition = { context in
-            vars.parentView.transform = CGAffineTransformIdentity
+            vars.parentView.transform = CGAffineTransform.identity
         }
         
         let completion : CoordinatedTransition = { completion in
@@ -87,19 +87,19 @@ class Presenter : UIPresentationController {
             }
         }
         
-        vars.coordinator.animateAlongsideTransitionInView(vars.parentView, animation:zoomBackInAnimation, completion:nil)
-        vars.coordinator.animateAlongsideTransition(closeOverlayAnimation, completion: completion)
-        vars.coordinator.notifyWhenInteractionEndsUsingBlock({_ in})
+        vars.coordinator.animateAlongsideTransition(in: vars.parentView, animation:zoomBackInAnimation, completion:nil)
+        vars.coordinator.animate(alongsideTransition: closeOverlayAnimation, completion: completion)
+        vars.coordinator.notifyWhenInteractionEnds({_ in})
     }
 }
 
 extension Presenter {
-    func preparePresentationAnimation(vars : TransitionVariables) {
+    func preparePresentationAnimation(_ vars : TransitionVariables) {
         if configuration.overlayZoomsOutPresentingViewController {
             configuration.overlay.alpha = 0.0
-            configuration.overlay.autoresizingMask = [.FlexibleWidth,.FlexibleHeight]
+            configuration.overlay.autoresizingMask = [.flexibleWidth,.flexibleHeight]
             configuration.overlay.frame = vars.containerView.bounds
-            vars.containerView.insertSubview(configuration.overlay, atIndex: 0)
+            vars.containerView.insertSubview(configuration.overlay, at: 0)
         }
     }
 }
@@ -120,7 +120,7 @@ extension Presenter {
 }
 
 extension Presenter {
-    override func presentationTransitionDidEnd(completed: Bool) {
+    override func presentationTransitionDidEnd(_ completed: Bool) {
         if completed {
             self.observer?.didPresentViewControllerInOverlay(nil)
         } else {
@@ -128,7 +128,7 @@ extension Presenter {
         }
     }
     
-    override func dismissalTransitionDidEnd(completed: Bool) {
+    override func dismissalTransitionDidEnd(_ completed: Bool) {
         if true == completed {
             self.observer?.didDismissViewControllerFromOverlay(nil)
         } else {
@@ -149,7 +149,7 @@ extension Presenter {
         }
     }
     
-    func zoomOutScale(vars:TransitionVariables) -> CGFloat {
+    func zoomOutScale(_ vars:TransitionVariables) -> CGFloat {
         return 1.0 - fabs(self.configuration.zoomOutMultipier * CGFloat(self.configuration.overlayTopMargin) / vars.containerView.bounds.height)
     }
 }
