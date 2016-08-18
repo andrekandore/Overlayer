@@ -39,10 +39,10 @@ class Presenter : UIPresentationController {
             if self.configuration.overlayZoomsOutPresentingViewController {
                 
                 let scale = self.zoomOutScale(vars)
-                vars.parentView.transform = vars.parentView.transform.scaleBy(x: scale, y: scale)
+                vars.parentView.transform = vars.parentView.transform.scaledBy(x: scale, y: scale)
                 
                 if self.configuration.zoomedOverlayTranslatesUpwardsProportionallyToTopMargin {
-                    vars.parentView.transform = vars.parentView.transform.translateBy(x: 0, y: -CGFloat(self.configuration.overlayTopMargin))
+                    vars.parentView.transform = vars.parentView.transform.translatedBy(x: 0, y: -CGFloat(self.configuration.overlayTopMargin))
                 }
             }
         }
@@ -105,7 +105,7 @@ extension Presenter {
 }
 
 extension Presenter {
-    override func frameOfPresentedViewInContainerView() -> CGRect {
+    override var frameOfPresentedViewInContainerView : CGRect {
         
         guard let containerView = self.containerView else {
             return super.frameOfPresentedViewInContainerView

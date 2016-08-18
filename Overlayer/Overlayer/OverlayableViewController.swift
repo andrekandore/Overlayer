@@ -14,7 +14,7 @@ open class OverlayableViewController : UIViewController, OverlayObservering {
     @IBOutlet open var draggableOverlayCoordinators : [DraggableSegueCoordinator] = []
     @IBInspectable open var lightStatusBar : Bool = true
     
-    override open func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {
+    override open func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let matchingSegues = self.matchingSeguesFilter(segue)
         self.draggableOverlayCoordinators.filter(matchingSegues).first?.handle(segue, sender: self, observer: self)
     }
@@ -30,7 +30,7 @@ open class OverlayableViewController : UIViewController, OverlayObservering {
         }
     }
     
-    override open func preferredStatusBarStyle() -> UIStatusBarStyle {
+    override open var preferredStatusBarStyle : UIStatusBarStyle {
         if true == self.lightStatusBar {
             return UIStatusBarStyle.lightContent
         } else {

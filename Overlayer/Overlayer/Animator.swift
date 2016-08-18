@@ -44,7 +44,7 @@ class Animator : NSObject, UIViewControllerAnimatedTransitioning {
         
         let completion : CompletionFunc = { finished in
             
-            let canceled = constants.context.transitionWasCancelled()
+            let canceled = constants.context.transitionWasCancelled
             constants.context.completeTransition(!canceled)
             if !canceled  {
                 self.cleanUpViewsAfterClosing(using: constants)
@@ -53,7 +53,7 @@ class Animator : NSObject, UIViewControllerAnimatedTransitioning {
             }
         }
         
-        if true == transitionContext.isInteractive() {
+        if true == transitionContext.isInteractive {
             UIView.interactivelyAnimate(animation:animations, completion:completion)
         } else {
             UIView.bounce(animation:animations, completion:completion)
@@ -76,7 +76,7 @@ extension Animator {
     
     func cleanUpViewsAfterClosing(using constants:AnimationConstants) {
         if .backwards == self.self.transistionDirection {
-            constants.container.superview?.backgroundColor = UIColor.clear()
+            constants.container.superview?.backgroundColor = UIColor.clear
             constants.view.alpha = 0.0
             constants.view.removeFromSuperview()
         }
@@ -117,14 +117,14 @@ extension Animator {
 extension Animator {
     func animationConstants(from context: UIViewControllerContextTransitioning) -> AnimationConstants? {
         
-        let controllerKey : String = .forwards == self.self.transistionDirection ? UITransitionContextToViewControllerKey : UITransitionContextFromViewControllerKey
-        let viewKey : String = .forwards == self.self.transistionDirection ? UITransitionContextToViewKey : UITransitionContextFromViewKey
+        let controllerKey : UITransitionContextViewControllerKey = .forwards == self.self.transistionDirection ? UITransitionContextViewControllerKey.to : UITransitionContextViewControllerKey.from
+        let viewKey : UITransitionContextViewKey = .forwards == self.self.transistionDirection ? UITransitionContextViewKey.to : UITransitionContextViewKey.from
         
         guard let controller = context.viewController(forKey: controllerKey), let view = context.view(forKey: viewKey) else {
             return nil
         }
         
-        let containerView = context.containerView()
+        let containerView = context.containerView
         let closedPositionFrame = self.frameOf(controller, beforeBeingPresentedIn:containerView ,with:context)
         let openedPositionFrame = context.finalFrame(for: controller)
         
