@@ -9,12 +9,12 @@
 import UIKit
 
 //Convenience Class for Linking Up and Activating Draggable Overlay
-public class OverlayableViewController : UIViewController, OverlayObservering {
+open class OverlayableViewController : UIViewController, OverlayObservering {
     
-    @IBOutlet public var draggableOverlayCoordinators : [DraggableSegueCoordinator] = []
-    @IBInspectable public var lightStatusBar : Bool = true
+    @IBOutlet open var draggableOverlayCoordinators : [DraggableSegueCoordinator] = []
+    @IBInspectable open var lightStatusBar : Bool = true
     
-    override public func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {
+    override open func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {
         let matchingSegues = self.matchingSeguesFilter(segue)
         self.draggableOverlayCoordinators.filter(matchingSegues).first?.handle(segue, sender: self, observer: self)
     }
@@ -23,14 +23,14 @@ public class OverlayableViewController : UIViewController, OverlayObservering {
         return { coordinator in
             if  let coordinatorIdentifier = coordinator.openSegueIdentifier,
                 let segueEdentifier = segue.identifier
-                where coordinatorIdentifier == segueEdentifier {
+                , coordinatorIdentifier == segueEdentifier {
                 return true
             }
             return false
         }
     }
     
-    override public func preferredStatusBarStyle() -> UIStatusBarStyle {
+    override open func preferredStatusBarStyle() -> UIStatusBarStyle {
         if true == self.lightStatusBar {
             return UIStatusBarStyle.lightContent
         } else {

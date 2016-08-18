@@ -17,7 +17,7 @@ class Presenter : UIPresentationController {
     init(with configuration:OverlayConfigurationProtocol, segue:UIStoryboardSegue ,observer:OverlayObservering?) {
         self.configuration = configuration
         self.observer = observer
-        super.init(presentedViewController: segue.destinationViewController, presenting: segue.sourceViewController)
+        super.init(presentedViewController: segue.destination, presenting: segue.source)
     }
     
     override func presentationTransitionWillBegin() {
@@ -53,7 +53,7 @@ class Presenter : UIPresentationController {
         }
         
         let completionBlock : CoordinatedTransition = { context in
-            if true == context.isCancelled() {
+            if true == context.isCancelled {
                 UIView.animate(animation: cancelAnimation) { _ in
                     self.configuration.overlay.removeFromSuperview()
                 }
@@ -82,7 +82,7 @@ class Presenter : UIPresentationController {
         }
         
         let completion : CoordinatedTransition = { completion in
-            if !completion.isCancelled() {
+            if !completion.isCancelled {
 //                vars.parentView.superview?.layer.sublayerTransform = CATransform3DIdentity
             }
         }
@@ -108,7 +108,7 @@ extension Presenter {
     override func frameOfPresentedViewInContainerView() -> CGRect {
         
         guard let containerView = self.containerView else {
-            return super.frameOfPresentedViewInContainerView()
+            return super.frameOfPresentedViewInContainerView
         }
         
         var containerViewBounds = containerView.bounds
@@ -141,7 +141,7 @@ typealias TransitionVariables = (parentView:UIView, containerView:UIView, coordi
 extension Presenter {
     var transitionVariables : TransitionVariables? {
         get {
-            guard let parentView = self.presentingViewController.view, let containerView = self.containerView, let coordinator = self.presentedViewController.transitionCoordinator() else {
+            guard let parentView = self.presentingViewController.view, let containerView = self.containerView, let coordinator = self.presentedViewController.transitionCoordinator else {
                 return nil
             }
             

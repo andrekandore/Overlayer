@@ -138,15 +138,15 @@ let zDepthTransform : CATransform3D = {
 
 //MARK: - Private Extensions
 extension UIView {
-    static func bounce(_ duration: TimeInterval = DefaultOverlayViewAnimationDuration,animation:() -> Void, completion: ((Bool) -> Void)? = EmptyCompletionFunc) {
+    static func bounce(_ duration: TimeInterval = DefaultOverlayViewAnimationDuration,animation:@escaping () -> Void, completion: ((Bool) -> Void)? = EmptyCompletionFunc) {
         self.animate(withDuration: DefaultOverlayViewAnimationDuration, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 2.0, options: [], animations: animation, completion: completion)
     }
     
-    static func interactivelyAnimate(_ duration: TimeInterval = DefaultOverlayViewAnimationDuration,animation:() -> Void, completion: ((Bool) -> Void)? = EmptyCompletionFunc) {
+    static func interactivelyAnimate(_ duration: TimeInterval = DefaultOverlayViewAnimationDuration,animation:@escaping () -> Void, completion: ((Bool) -> Void)? = EmptyCompletionFunc) {
         self.animate(withDuration: duration, delay:0, options:InteractiveLinearAnimationOptions, animations:animation, completion:completion)
     }
     
-    static func animate(_ duration: TimeInterval = DefaultOverlayViewAnimationDuration,animation:() -> Void, completion: ((Bool) -> Void)? = EmptyCompletionFunc) {
+    static func animate(_ duration: TimeInterval = DefaultOverlayViewAnimationDuration,animation:@escaping () -> Void, completion: ((Bool) -> Void)? = EmptyCompletionFunc) {
         self.animate(withDuration: duration, delay:0, options:EaseInEaseOutAnimationOptions, animations:animation, completion:completion)
     }
 }
