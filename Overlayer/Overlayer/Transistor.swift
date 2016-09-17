@@ -15,7 +15,7 @@ class Transistor : UIPercentDrivenInteractiveTransition, TransistorProtocol, Ove
     let interactionThreshold : CGFloat = 0.22
     let recognitionBeganCallback : VoidFunc
     
-    init(recognitionBeganCallback : VoidFunc = EmptyVoidFunc, transistionDirection : TransistionDirection) {
+    init(recognitionBeganCallback : @escaping VoidFunc = EmptyVoidFunc, transistionDirection : TransistionDirection) {
         self.recognitionBeganCallback = recognitionBeganCallback
         self.transistionDirection = transistionDirection
         super.init()
