@@ -17,6 +17,10 @@ open class OverlayableViewController : UIViewController, OverlayableViewControll
     open override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         self.attempt(overlaying: segue, sender: sender)
     }
+    
+    open override var preferredStatusBarStyle: UIStatusBarStyle {
+        get { return self.statusBarStyle } set {}
+    }
 }
 
 
