@@ -109,7 +109,7 @@ extension UIViewController {
 //MARK: Overlayable View Controller Protocols and Default Implementations
 public protocol OverlayableViewControllerProtocol : OverlayObservering {
     func matchingSeguesFilter(_ segue:UIStoryboardSegue) ->  (DraggableSegueCoordinator) -> Bool
-    func attempt(_ segue: UIStoryboardSegue, sender: Any?)
+    func attempt(overlaying segue: UIStoryboardSegue, sender: Any?)
     
     var draggableOverlayCoordinators : [DraggableSegueCoordinator] {get set}
     var viewForDraggedDismissalOutlet : UIView? {get set}
@@ -129,7 +129,7 @@ extension OverlayableViewControllerProtocol where Self : UIViewController {
         }
     }
     
-    public func attempt(_ segue: UIStoryboardSegue, sender: Any?) {
+    public func attempt(overlaying segue: UIStoryboardSegue, sender: Any?) {
         let matchingSegues = self.matchingSeguesFilter(segue)
         self.draggableOverlayCoordinators.filter(matchingSegues).first?.handle(segue, sender: self, observer: self)
     }

@@ -15,7 +15,7 @@ open class OverlayableViewController : UIViewController, OverlayableViewControll
     @IBInspectable open var lightStatusBar : Bool = true
     
     open override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        self.attempt(segue, sender: sender)
+        self.attempt(overlaying: segue, sender: sender)
     }
 }
 
