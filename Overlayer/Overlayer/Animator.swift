@@ -69,7 +69,6 @@ class Animator : NSObject, UIViewControllerAnimatedTransitioning {
         }
     }
     
-    
 }
 
 extension Animator {
@@ -77,15 +76,36 @@ extension Animator {
         
         let theBackgroundView : UIView
         
-        if let backgroundView = constants.controller.view.window?.viewWithTag(backgroundOverlayIdentifier) {
-            print("Got \(#function) as \(backgroundView)")
-            theBackgroundView =  backgroundView
+        if let backgroundView = self.backgroundViewFromTag(for:constants) {
+            theBackgroundView = backgroundView
         } else {
-            theBackgroundView = constants.container
-            theBackgroundView.tag = backgroundOverlayIdentifier
+            theBackgroundView = self.createBackground(for: constants)
         }
         
-        return constants.container
+        return theBackgroundView
+    }
+    
+    func backgroundViewFromTag(for constants:AnimationConstants) -> UIView? {
+        return constants.container.window?.viewWithTag(backgroundOverlayIdentifier)
+    }
+    
+    func createBackground(for constants:AnimationConstants) -> UIView {
+        
+        if let currentBackgroundView = backgroundViewFromTag(for: constants) {
+            print("Got \(#function) as \(currentBackgroundView)")
+            return currentBackgroundView
+        }
+        
+        let theBackgroundView = UIView(frame: constants.container.frame)
+        theBackgroundView.autoresizingMask = [.flexibleWidth,.flexibleHeight]
+        theBackgroundView.tag = backgroundOverlayIdentifier
+        theBackgroundView.backgroundColor = OverlayColor
+        theBackgroundView.alpha = 0.0
+        
+        constants.container.superview?.insertSubview(theBackgroundView, at: 0)
+        print("Created... \(#function) as \(theBackgroundView)")
+
+        return theBackgroundView
     }
 }
 
@@ -152,7 +172,7 @@ extension Animator {
         guard let controller = context.viewController(forKey: self.controllerKey), let view = context.view(forKey: self.viewKey) else {
             return nil
         }
-        
+                
         let containerView = context.containerView
         let closedPositionFrame = self.frameOf(controller, beforeBeingPresentedIn:containerView ,with:context)
         let openedPositionFrame = context.finalFrame(for: controller)
