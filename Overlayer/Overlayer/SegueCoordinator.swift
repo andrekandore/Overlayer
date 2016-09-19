@@ -42,6 +42,15 @@ extension DraggableSegueCoordinator {
         set { self.configuration.zoomedOverlayAltersContainerContainerBackground = newValue }
     }
     
+    @IBInspectable public var modalPresentationCapturesStatusBarAppearance: Bool {
+        get { return self.configuration.modalPresentationCapturesStatusBarAppearance }
+        set { self.configuration.modalPresentationCapturesStatusBarAppearance = newValue }
+    }
+    @IBInspectable public var overlayIsFullScreenWhenNotCustomPresentation : Bool {
+        get { return self.configuration.overlayIsFullScreenWhenNotCustomPresentation }
+        set { self.configuration.overlayIsFullScreenWhenNotCustomPresentation = newValue }
+    }
+    
     @IBInspectable public var overlayZoomsOutPresentingViewController : Bool {
         get { return self.configuration.overlayZoomsOutPresentingViewController }
         set { self.configuration.overlayZoomsOutPresentingViewController = newValue }
@@ -52,6 +61,11 @@ extension DraggableSegueCoordinator {
         set { self.configuration.fadeInPresentationAndFadeOutDismissal = newValue }
     }
 
+    @IBInspectable public var overlayPresentationStyleIsCustom : Bool {
+        get { return self.configuration.overlayPresentationStyleIsCustom }
+        set { self.configuration.overlayPresentationStyleIsCustom = newValue }
+    }
+    
     @IBInspectable public var overlayTopMargin : UInt {
         get { return self.configuration.overlayTopMargin }
         set { self.configuration.overlayTopMargin = newValue }
@@ -61,7 +75,7 @@ extension DraggableSegueCoordinator {
         get { return self.configuration.zoomOutMultipier }
         set { self.configuration.zoomOutMultipier = newValue }
     }
-
+    
     @IBOutlet public var dragSourceView : UIView? {
         get { return self.configuration.dragSourceView }
         set { self.configuration.dragSourceView = newValue }
@@ -103,9 +117,14 @@ extension DraggableSegueCoordinator {
     public func handle(_ segue: UIStoryboardSegue, sender: UIViewController, observer:OverlayObservering) -> Bool {
         
         if (self.makePresentingIfPossible(segue)) {
-            segue.destination.modalPresentationCapturesStatusBarAppearance = true
-            segue.destination.modalPresentationStyle = .custom;
+
+            segue.destination.modalPresentationCapturesStatusBarAppearance = self.configuration.modalPresentationCapturesStatusBarAppearance
+            segue.destination.modalPresentationStyle = self.presentationStyle
             segue.destination.transitioningDelegate = self
+            
+            segue.source.providesPresentationContextTransitionStyle = true
+            segue.source.definesPresentationContext = true
+            
             self.observer = observer
         }
         
@@ -129,6 +148,18 @@ extension DraggableSegueCoordinator {
             segue.destination.transitioningDelegate = nil
         }
     }
+    
+    public var presentationStyle : UIModalPresentationStyle {
+        get {
+            return (self.configuration.overlayPresentationStyleIsCustom ? .custom : self.nonCustomPresentationStyle)
+        } set {}
+    }
+    
+    public var nonCustomPresentationStyle : UIModalPresentationStyle {
+        get {
+            return (self.configuration.overlayIsFullScreenWhenNotCustomPresentation ? .overFullScreen : .overCurrentContext)
+        } set {}
+    }
 }
 
 private extension DraggableSegueCoordinator {
@@ -145,7 +176,7 @@ private extension DraggableSegueCoordinator {
     }
 }
 
-//These are entry points for state change... NEVER EVER EVER SET STATE DIRECTLY OR I WILL THROW A CONIPTION FIT!! 😋
+//These are entry points for state change... NEVER EVER EVER SET STATE DIRECTLY!! 😋
 //This extension just wraps the _state so that its all in one place...
 private extension DraggableSegueCoordinator {
     func makePresentableIfPossible(with configuration:OverlayConfiguration)  -> Bool {
@@ -217,6 +248,7 @@ extension DraggableSegueCoordinator : UIViewControllerTransitioningDelegate {
         return nil
     }
     
+    //The following are only called if the presentation style is .custom...
     public func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
         
         guard case .presenting(let segue) = self.state else  {

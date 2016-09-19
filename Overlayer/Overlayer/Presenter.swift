@@ -91,6 +91,22 @@ class Presenter : UIPresentationController {
         vars.coordinator.animate(alongsideTransition: closeOverlayAnimation, completion: completion)
         vars.coordinator.notifyWhenInteractionEnds({_ in})
     }
+    
+    override var shouldPresentInFullscreen: Bool {
+        return false
+    }
+    
+    override var adaptivePresentationStyle : UIModalPresentationStyle {
+        return .overCurrentContext
+    }
+    
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+    }
+    
+    override var shouldRemovePresentersView: Bool {
+        return false
+    }
 }
 
 extension Presenter {

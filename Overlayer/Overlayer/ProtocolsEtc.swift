@@ -36,12 +36,119 @@ public extension OverlayObservering {
     func didDismissViewControllerFromOverlay(_ coordinator:DraggableSegueCoordinator?) {debugPrint(#function)}
 }
 
-//Mark: Gesture Recognition
+//MARK: Gesture Recognition
 //Used to Tie Gesture Recognizers on Outside to Inner Objects
 public protocol OverlayCoordinating : class {
     func handlePanGesture(_ recognizer : UIPanGestureRecognizer)
     func handleTapGesture(_ recognizer : UITapGestureRecognizer)
 }
+
+
+
+public protocol OverlayableViewControllerConvenience {
+    func unwindFromOverlayToPrevious(_ unwindSegue : UIStoryboardSegue)
+    func unwindFromNonCustomOverlay(segue : UIStoryboardSegue)
+    func defaultViewForDraggedDismissal() -> UIView?
+}
+
+//MARK: View Controller Support
+extension UIViewController {
+    
+    @IBAction open func unwindFromOverlayToPrevious(_ unwindSegue : UIStoryboardSegue) {
+        debugPrint(#function)
+    }
+    
+    @IBAction open func unwindFromNonCustomOverlay(segue : UIStoryboardSegue) {
+        debugPrint(#function)
+        
+        if let currentPresenter = self.ancestorOverlayController {
+            let matchingSegues = currentPresenter.matchingSeguesFilter(segue)
+            currentPresenter.draggableOverlayCoordinators.filter(matchingSegues).first?.closeDraggableOverlayIfPossible()
+        } else {
+            presentingViewController?.dismiss(animated: true, completion: nil)
+        }
+    }
+    
+    public var viewForDraggedDismissal : UIView? {
+        get {
+            return self.defaultViewForDraggedDismissal()
+        } set {}
+    }
+    
+    public var ancestorOverlayController : OverlayableViewControllerProtocol? {
+        get {
+            return self.searchForAncestorOverlayer()
+        } set {}
+    }
+    
+    private func searchForAncestorOverlayer()  -> OverlayableViewControllerProtocol? {
+        
+        var controller = self.presentingViewController
+        while let presenter = controller  {
+            if let overlayPresenter = presenter as? OverlayableViewControllerProtocol {
+                return overlayPresenter
+            } else {
+                controller = presenter.presentingViewController
+            }
+        }
+        
+        return nil
+    }
+    
+    public func defaultViewForDraggedDismissal() -> UIView? {
+        if let headerToolbar = self.navigationController?.navigationBar {
+            return headerToolbar
+        }
+        
+        return self.view
+    }
+    
+}
+
+
+//MARK: Overlayable View Controller Protocols and Default Implementations
+public protocol OverlayableViewControllerProtocol : OverlayObservering {
+    func matchingSeguesFilter(_ segue:UIStoryboardSegue) ->  (DraggableSegueCoordinator) -> Bool
+    func attempt(_ segue: UIStoryboardSegue, sender: Any?)
+    
+    var draggableOverlayCoordinators : [DraggableSegueCoordinator] {get set}
+    var viewForDraggedDismissalOutlet : UIView? {get set}
+    var lightStatusBar : Bool {get set}
+}
+
+extension OverlayableViewControllerProtocol where Self : UIViewController {
+    
+    public func matchingSeguesFilter(_ segue:UIStoryboardSegue) ->  (DraggableSegueCoordinator) -> Bool {
+        return { coordinator in
+            if  let coordinatorIdentifier = coordinator.openSegueIdentifier,
+                let segueEdentifier = segue.identifier
+                , coordinatorIdentifier == segueEdentifier {
+                return true
+            }
+            return false
+        }
+    }
+    
+    public func attempt(_ segue: UIStoryboardSegue, sender: Any?) {
+        let matchingSegues = self.matchingSeguesFilter(segue)
+        self.draggableOverlayCoordinators.filter(matchingSegues).first?.handle(segue, sender: self, observer: self)
+    }
+    
+    public var preferredStatusBarStyle: UIStatusBarStyle {
+        if true == self.lightStatusBar {
+            return UIStatusBarStyle.lightContent
+        } else {
+            return UIStatusBarStyle.default
+        }
+    }
+    
+    public var viewForDraggedDismissal : UIView? {
+        get {
+            return nil == self.viewForDraggedDismissalOutlet ? self.defaultViewForDraggedDismissal() : self.viewForDraggedDismissalOutlet
+        } set {}
+    }
+}
+
 
 //MARK: -
 //MARK: ⬛︎ ⬛︎ ⬛︎ Privates ⬛︎ ⬛︎ ⬛︎
@@ -64,11 +171,14 @@ protocol OverlayConfigurationProtocol {
 }
 
 struct OverlayConfiguration : OverlayConfigurationProtocol {
-    var zoomedOverlayTranslatesUpwardsProportionallyToTopMargin : Bool = false
+    var zoomedOverlayTranslatesUpwardsProportionallyToTopMargin = false
     var zoomedOverlayAltersContainerContainerBackground = true
+    var modalPresentationCapturesStatusBarAppearance = false
+    var overlayIsFullScreenWhenNotCustomPresentation = false
     var overlay : UIView = UIView().setBgColor(OverlayColor)
     var overlayZoomsOutPresentingViewController = true
     var fadeInPresentationAndFadeOutDismissal = false
+    var overlayPresentationStyleIsCustom = true
     var zoomOutMultipier : CGFloat = -1.72
     
     var transistionDirection = TransistionDirection.forwards
@@ -116,10 +226,11 @@ typealias CoordinatedTransition = (UIViewControllerTransitionCoordinatorContext)
 typealias CompletionFunc = (Bool) -> Void
 typealias VoidFunc = (Void) -> Void
 
-
 //Private Constants
-let ContainerViewBakgroundColor = UIColor.init(colorLiteralRed: 0.333, green: 0.358, blue: 0.364, alpha: 1.0)
-let OverlayColor = UIColor(colorLiteralRed: 0.005, green: 0.025, blue: 0.1, alpha: 0.18)
+let ContainerViewBakgroundColor = #colorLiteral(red: 0.06192428619, green: 0.1183832064, blue: 0.2607267499, alpha: 1)
+let OverlayColor = #colorLiteral(red: 0.06192428619, green: 0.1183832064, blue: 0.2607267499, alpha: 0.1985928867)
+
+let backgroundOverlayIdentifier = -9223372036854775808
 
 let InteractiveLinearAnimationOptions : UIViewAnimationOptions = [.overrideInheritedCurve,.curveLinear]
 let EaseInEaseOutAnimationOptions : UIViewAnimationOptions = [.overrideInheritedCurve, .curveEaseInOut]
