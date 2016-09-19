@@ -33,19 +33,20 @@ class Animator : NSObject, UIViewControllerAnimatedTransitioning {
         
         let animations = {
             constants.view.frame = constants.endingFrame
-            
+            constants.view.superview?.layoutIfNeeded()
+
             if .backwards == self.transistionDirection {
                 constants.view.alpha = self.configuration.fadeInPresentationAndFadeOutDismissal ? 0.0 : 1.0
                 
                 if self.configuration.zoomedOverlayAltersContainerContainerBackground {
-                    constants.container.backgroundColor = UIColor.clear
+                    self.containerBackground(for: constants).backgroundColor = UIColor.clear
                 }
 
             } else {
                 constants.view.alpha = 1.0
                 
                 if self.configuration.zoomedOverlayAltersContainerContainerBackground {
-                    constants.container.backgroundColor = ContainerViewBakgroundColor
+                    self.containerBackground(for: constants).backgroundColor = ContainerViewBakgroundColor
                 }
             }
         }
@@ -66,9 +67,27 @@ class Animator : NSObject, UIViewControllerAnimatedTransitioning {
         } else {
             UIView.bounce(animation:animations, completion:completion)
         }
-    }    
+    }
+    
+    
 }
 
+extension Animator {
+    func containerBackground(for constants:AnimationConstants) -> UIView {
+        
+        let theBackgroundView : UIView
+        
+        if let backgroundView = constants.controller.view.window?.viewWithTag(backgroundOverlayIdentifier) {
+            print("Got \(#function) as \(backgroundView)")
+            theBackgroundView =  backgroundView
+        } else {
+            theBackgroundView = constants.container
+            theBackgroundView.tag = backgroundOverlayIdentifier
+        }
+        
+        return constants.container
+    }
+}
 
 typealias AnimationConstants = (controller:UIViewController, view:UIView, context:UIViewControllerContextTransitioning,startingFrame:CGRect, endingFrame:CGRect, container: UIView)
 extension Animator {
