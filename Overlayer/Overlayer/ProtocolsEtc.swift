@@ -134,7 +134,7 @@ extension OverlayableViewControllerProtocol where Self : UIViewController {
         self.draggableOverlayCoordinators.filter(matchingSegues).first?.handle(segue, sender: self, observer: self)
     }
     
-    public var preferredStatusBarStyle: UIStatusBarStyle {
+    public var statusBarStyle: UIStatusBarStyle {
         if true == self.lightStatusBar {
             return UIStatusBarStyle.lightContent
         } else {
@@ -227,8 +227,8 @@ typealias CompletionFunc = (Bool) -> Void
 typealias VoidFunc = (Void) -> Void
 
 //Private Constants
-let ContainerViewBakgroundColor = #colorLiteral(red: 0.06192428619, green: 0.1183832064, blue: 0.2607267499, alpha: 1)
-let OverlayColor = #colorLiteral(red: 0.06192428619, green: 0.1183832064, blue: 0.2607267499, alpha: 0.1985928867)
+let ContainerViewBakgroundColor = #colorLiteral(red: 0.07541804363, green: 0.144179778, blue: 0.3175410266, alpha: 1)
+let OverlayColor = #colorLiteral(red: 0.03935645978, green: 0.07072254669, blue: 0.1498023435, alpha: 0.2637689917)
 
 let backgroundOverlayIdentifier = -9223372036854775808
 
