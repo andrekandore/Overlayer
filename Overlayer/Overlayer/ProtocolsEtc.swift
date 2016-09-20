@@ -69,12 +69,6 @@ extension UIViewController {
         }
     }
     
-    public var viewForDraggedDismissal : UIView? {
-        get {
-            return self.defaultViewForDraggedDismissal()
-        } set {}
-    }
-    
     public var ancestorOverlayController : OverlayableViewControllerProtocol? {
         get {
             return self.searchForAncestorOverlayer()
@@ -100,7 +94,7 @@ extension UIViewController {
             return headerToolbar
         }
         
-        return self.view
+        return nil
     }
     
 }
@@ -144,7 +138,10 @@ extension OverlayableViewControllerProtocol where Self : UIViewController {
     
     public var viewForDraggedDismissal : UIView? {
         get {
-            return nil == self.viewForDraggedDismissalOutlet ? self.defaultViewForDraggedDismissal() : self.viewForDraggedDismissalOutlet
+            if let dragView = self.viewForDraggedDismissalOutlet {
+                return dragView
+            }
+            return self.defaultViewForDraggedDismissal()
         } set {}
     }
 }
@@ -158,28 +155,33 @@ extension OverlayableViewControllerProtocol where Self : UIViewController {
 //Overlay Config is Passed to Helper Objects as Protocols with only GET functionality to prevent accidental changes
 protocol OverlayConfigurationProtocol {
     var zoomedOverlayTranslatesUpwardsProportionallyToTopMargin : Bool {get}
-    var zoomedOverlayAltersContainerContainerBackground : Bool {get}
+    var modalPresentationCapturesStatusBarAppearance : Bool {get}
+    var overlayIsFullScreenWhenNotCustomPresentation : Bool {get}
     var overlayZoomsOutPresentingViewController : Bool {get}
     var fadeInPresentationAndFadeOutDismissal : Bool {get}
+    var overlayPresentationStyleIsCustom : Bool {get}
     var zoomOutMultipier : CGFloat {get}
-    var overlay : UIView {get}
+    var cornerRadius : CGFloat {get}
     
     var segue : UIStoryboardSegue? {get}
+    var overlay : UIView  {get}
     
     var overlayTopMargin : UInt {get}
     var dragSourceView : UIView? {get}    
 }
 
 struct OverlayConfiguration : OverlayConfigurationProtocol {
-    var zoomedOverlayTranslatesUpwardsProportionallyToTopMargin = false
-    var zoomedOverlayAltersContainerContainerBackground = true
-    var modalPresentationCapturesStatusBarAppearance = false
-    var overlayIsFullScreenWhenNotCustomPresentation = false
+    
     var overlay : UIView = UIView().setBgColor(OverlayColor)
+
+    var zoomedOverlayTranslatesUpwardsProportionallyToTopMargin = false
+    var modalPresentationCapturesStatusBarAppearance = true
+    var overlayIsFullScreenWhenNotCustomPresentation = false
     var overlayZoomsOutPresentingViewController = true
     var fadeInPresentationAndFadeOutDismissal = false
     var overlayPresentationStyleIsCustom = true
-    var zoomOutMultipier : CGFloat = -1.72
+    var zoomOutMultipier : CGFloat = -1.52
+    var cornerRadius : CGFloat = 8
     
     var transistionDirection = TransistionDirection.forwards
     
@@ -187,7 +189,7 @@ struct OverlayConfiguration : OverlayConfigurationProtocol {
     var openSegueIdentifier : String?
     var segue : UIStoryboardSegue?
     
-    var overlayTopMargin : UInt = 0
+    var overlayTopMargin : UInt = 20
     var dragSourceView : UIView?
 }
 
@@ -227,10 +229,7 @@ typealias CompletionFunc = (Bool) -> Void
 typealias VoidFunc = (Void) -> Void
 
 //Private Constants
-let ContainerViewBakgroundColor = #colorLiteral(red: 0.07541804363, green: 0.144179778, blue: 0.3175410266, alpha: 1)
 let OverlayColor = #colorLiteral(red: 0.03935645978, green: 0.07072254669, blue: 0.1498023435, alpha: 0.2637689917)
-
-let backgroundOverlayIdentifier = -9223372036854775808
 
 let InteractiveLinearAnimationOptions : UIViewAnimationOptions = [.overrideInheritedCurve,.curveLinear]
 let EaseInEaseOutAnimationOptions : UIViewAnimationOptions = [.overrideInheritedCurve, .curveEaseInOut]

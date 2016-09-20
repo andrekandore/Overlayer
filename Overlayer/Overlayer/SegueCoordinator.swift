@@ -36,16 +36,12 @@ extension DraggableSegueCoordinator {
         get { return self.configuration.zoomedOverlayTranslatesUpwardsProportionallyToTopMargin }
         set { self.configuration.zoomedOverlayTranslatesUpwardsProportionallyToTopMargin = newValue }
     }
-
-    @IBInspectable public var zoomedOverlayAltersContainerContainerBackground : Bool {
-        get { return self.configuration.zoomedOverlayAltersContainerContainerBackground }
-        set { self.configuration.zoomedOverlayAltersContainerContainerBackground = newValue }
-    }
     
     @IBInspectable public var modalPresentationCapturesStatusBarAppearance: Bool {
         get { return self.configuration.modalPresentationCapturesStatusBarAppearance }
         set { self.configuration.modalPresentationCapturesStatusBarAppearance = newValue }
     }
+    
     @IBInspectable public var overlayIsFullScreenWhenNotCustomPresentation : Bool {
         get { return self.configuration.overlayIsFullScreenWhenNotCustomPresentation }
         set { self.configuration.overlayIsFullScreenWhenNotCustomPresentation = newValue }
@@ -64,6 +60,11 @@ extension DraggableSegueCoordinator {
     @IBInspectable public var overlayPresentationStyleIsCustom : Bool {
         get { return self.configuration.overlayPresentationStyleIsCustom }
         set { self.configuration.overlayPresentationStyleIsCustom = newValue }
+    }
+    
+    @IBInspectable public var cornerRadius : CGFloat {
+        get { return self.configuration.cornerRadius }
+        set { self.configuration.cornerRadius = newValue }
     }
     
     @IBInspectable public var overlayTopMargin : UInt {
@@ -121,6 +122,7 @@ extension DraggableSegueCoordinator {
             segue.destination.modalPresentationCapturesStatusBarAppearance = self.configuration.modalPresentationCapturesStatusBarAppearance
             segue.destination.modalPresentationStyle = self.presentationStyle
             segue.destination.transitioningDelegate = self
+            segue.destination.setNeedsStatusBarAppearanceUpdate()
             
             segue.source.providesPresentationContextTransitionStyle = true
             segue.source.definesPresentationContext = true
@@ -165,9 +167,11 @@ extension DraggableSegueCoordinator {
 private extension DraggableSegueCoordinator {
     
     func prepareDestinationViewControllerForSwipeDown() {
-        if case .presenting(let segue) = self.state, let slideDownView = segue.destination.viewForDraggedDismissal {
-            let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(self.closeRecognizerDidRecognize))
-            slideDownView.addGestureRecognizer(panGestureRecognizer)
+        if case .presenting(let segue) = self.state{
+            if let slideDownView = (segue.destination as? Overlayer.OverlayableViewController)?.viewForDraggedDismissal {
+                let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(self.closeRecognizerDidRecognize))
+                slideDownView.addGestureRecognizer(panGestureRecognizer)
+            }
         }
     }
     

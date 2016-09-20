@@ -44,11 +44,14 @@ class Presenter : UIPresentationController {
                 if self.configuration.zoomedOverlayTranslatesUpwardsProportionallyToTopMargin {
                     vars.parentView.transform = vars.parentView.transform.translatedBy(x: 0, y: -CGFloat(self.configuration.overlayTopMargin))
                 }
+                
+                vars.parentView.layer.cornerRadius = self.configuration.cornerRadius
             }
         }
         
         let cancelAnimation = {
             vars.parentView.layer.transform = CATransform3DIdentity
+            vars.parentView.layer.cornerRadius = 0.0
             self.configuration.overlay.alpha = 0.0
         }
         

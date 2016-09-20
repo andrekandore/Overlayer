@@ -12,6 +12,7 @@ class Animator : NSObject, UIViewControllerAnimatedTransitioning {
     
     let transistionDirection : TransistionDirection
     let configuration : OverlayConfigurationProtocol
+    let identifier = Int(arc4random())
     
     init(with configuration:OverlayConfigurationProtocol, direction:TransistionDirection) {
         self.transistionDirection = direction
@@ -32,23 +33,19 @@ class Animator : NSObject, UIViewControllerAnimatedTransitioning {
         self.prepareViewsForAnimation(using:constants)
         
         let animations = {
-            constants.view.frame = constants.endingFrame
-            constants.view.superview?.layoutIfNeeded()
-
+            constants.presentedView.frame = constants.endingFrame
+            
             if .backwards == self.transistionDirection {
-                constants.view.alpha = self.configuration.fadeInPresentationAndFadeOutDismissal ? 0.0 : 1.0
-                
-                if self.configuration.zoomedOverlayAltersContainerContainerBackground {
-                    self.containerBackground(for: constants).backgroundColor = UIColor.clear
-                }
-
+                constants.presentedView.alpha = self.configuration.fadeInPresentationAndFadeOutDismissal ? 0.0 : 1.0
+                constants.presentedView.layer.cornerRadius = 0
+                constants.presentedView.layer.cornerRadius = 0
             } else {
-                constants.view.alpha = 1.0
-                
-                if self.configuration.zoomedOverlayAltersContainerContainerBackground {
-                    self.containerBackground(for: constants).backgroundColor = ContainerViewBakgroundColor
-                }
+                constants.presentedView.alpha = 1.0
+                constants.presentedView.layer.cornerRadius = self.configuration.cornerRadius
+                constants.presentingView.layer.cornerRadius = self.configuration.cornerRadius
             }
+            
+            constants.presentedView.layoutIfNeeded()
         }
         
         let completion : CompletionFunc = { finished in
@@ -71,75 +68,33 @@ class Animator : NSObject, UIViewControllerAnimatedTransitioning {
     
 }
 
-extension Animator {
-    func containerBackground(for constants:AnimationConstants) -> UIView {
-        
-        let theBackgroundView : UIView
-        
-        if let backgroundView = self.backgroundViewFromTag(for:constants) {
-            theBackgroundView = backgroundView
-        } else {
-            theBackgroundView = self.createBackground(for: constants)
-        }
-        
-        return theBackgroundView
-    }
-    
-    func backgroundViewFromTag(for constants:AnimationConstants) -> UIView? {
-        return constants.container.window?.viewWithTag(backgroundOverlayIdentifier)
-    }
-    
-    func createBackground(for constants:AnimationConstants) -> UIView {
-        
-        if let currentBackgroundView = backgroundViewFromTag(for: constants) {
-            print("Got \(#function) as \(currentBackgroundView)")
-            return currentBackgroundView
-        }
-        
-        let theBackgroundView = UIView(frame: constants.container.frame)
-        theBackgroundView.autoresizingMask = [.flexibleWidth,.flexibleHeight]
-        theBackgroundView.tag = backgroundOverlayIdentifier
-        theBackgroundView.backgroundColor = OverlayColor
-        theBackgroundView.alpha = 0.0
-        
-        constants.container.superview?.insertSubview(theBackgroundView, at: 0)
-        print("Created... \(#function) as \(theBackgroundView)")
-
-        return theBackgroundView
-    }
-}
-
-typealias AnimationConstants = (controller:UIViewController, view:UIView, context:UIViewControllerContextTransitioning,startingFrame:CGRect, endingFrame:CGRect, container: UIView)
+typealias AnimationConstants = (context:UIViewControllerContextTransitioning, startingFrame:CGRect, endingFrame:CGRect, container: UIView,presentingController:UIViewController,presentingView:UIView,presentedController:UIViewController,presentedView:UIView)
 extension Animator {
     func prepareViewsForAnimation(using constants:AnimationConstants) {
+        
         if .forwards == self.transistionDirection {
-            
-            constants.view.alpha = configuration.fadeInPresentationAndFadeOutDismissal ? 0.0 : 1.0
-            constants.view.frame = constants.startingFrame
-            constants.container.addSubview(constants.view)
-            
-            if self.configuration.zoomedOverlayAltersContainerContainerBackground {
-                constants.container.backgroundColor = UIColor.clear
-            }
+            constants.presentedView.alpha = configuration.fadeInPresentationAndFadeOutDismissal ? 0.0 : 1.0
+            constants.presentedView.frame = constants.startingFrame
+            constants.container.addSubview(constants.presentedView)
         }
         
-        constants.view.superview?.layoutIfNeeded()
+        constants.presentedView.superview?.layoutIfNeeded()
     }
     
     func cleanUpViewsAfterClosing(using constants:AnimationConstants) {
+        
         if .backwards == self.self.transistionDirection {
-            
-            constants.view.alpha = 0.0
-            constants.view.removeFromSuperview()
+            constants.presentedView.alpha = 0.0
+            constants.presentedView.removeFromSuperview()
         }
     }
     
     func returnViewsToOriginalStateAfterCancelation(using constants:AnimationConstants) {
         UIView.bounce( animation:{
             if .forwards == self.transistionDirection  {
-                constants.view.alpha = self.configuration.fadeInPresentationAndFadeOutDismissal ? 0.0 : 1.0
+                constants.presentedView.alpha = self.configuration.fadeInPresentationAndFadeOutDismissal ? 0.0 : 1.0
             }
-            constants.view.frame = constants.startingFrame
+            constants.presentedView.frame = constants.startingFrame
         }, completion: { _ in
             if .forwards == self.self.transistionDirection  {
                 self.cleanUpViewsAfterClosing(using: constants)
@@ -168,38 +123,40 @@ extension Animator {
 
 extension Animator {
     func animationConstants(from context: UIViewControllerContextTransitioning) -> AnimationConstants? {
-        
-        guard let controller = context.viewController(forKey: self.controllerKey), let view = context.view(forKey: self.viewKey) else {
+
+        guard let presentedController = context.viewController(forKey: self.presentedControllerKey), let presentedView = context.view(forKey: self.presentedViewKey) else {
             return nil
         }
-                
+        
+        guard let presentingController = context.viewController(forKey: self.presentingControllerKey) else {
+            return nil
+        }
+        
         let containerView = context.containerView
-        let closedPositionFrame = self.frameOf(controller, beforeBeingPresentedIn:containerView ,with:context)
-        let openedPositionFrame = context.finalFrame(for: controller)
+        let closedPositionFrame = self.frameOf(presentedController, beforeBeingPresentedIn:containerView ,with:context)
+        let openedPositionFrame = context.finalFrame(for: presentedController)
         
         let startingFrame : CGRect = .backwards == self.transistionDirection ? openedPositionFrame : closedPositionFrame
         let endingFrame : CGRect = .backwards == self.transistionDirection ? closedPositionFrame : openedPositionFrame
         
-        return (controller,view,context,startingFrame,endingFrame,containerView)
+        return (context,startingFrame,endingFrame,containerView,presentingController,UIView(),presentedController,presentedView)
     }
     
-    var controllerKey : UITransitionContextViewControllerKey {
-        get {
-            if .forwards == self.transistionDirection {
-                return .to
-            } else {
-                return .from
-            }
-        }
+    var presentedControllerKey : UITransitionContextViewControllerKey {
+        get { return (.forwards == self.transistionDirection ? .to : .from) }
     }
     
-    var viewKey : UITransitionContextViewKey {
-        get {
-            if .forwards == self.transistionDirection {
-                return .to
-            } else {
-                return .from
-            }
-        }
+    var presentedViewKey : UITransitionContextViewKey {
+        get { return (.forwards == self.transistionDirection ? .to : .from) }
     }
+    
+    var presentingControllerKey : UITransitionContextViewControllerKey {
+        get { return (.forwards == self.transistionDirection ? .from : .to) }
+    }
+    
+    var presentingViewKey : UITransitionContextViewKey {
+        get { return (.forwards == self.transistionDirection ? .from : .to) }
+    }
+
+    
 }

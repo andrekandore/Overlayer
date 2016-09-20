@@ -21,6 +21,7 @@ open class OverlayableViewController : UIViewController, OverlayableViewControll
     open override var preferredStatusBarStyle: UIStatusBarStyle {
         get { return self.statusBarStyle } set {}
     }
+    
 }
 
 
