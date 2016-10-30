@@ -89,7 +89,7 @@ extension UIViewController {
         return nil
     }
     
-    public func defaultViewForDraggedDismissal() -> UIView? {
+    open func defaultViewForDraggedDismissal() -> UIView? {
         if let headerToolbar = self.navigationController?.navigationBar {
             return headerToolbar
         }
@@ -97,6 +97,12 @@ extension UIViewController {
         return nil
     }
     
+}
+
+extension UINavigationController {
+    open override func defaultViewForDraggedDismissal() -> UIView? {
+        return self.navigationBar
+    }
 }
 
 
@@ -189,7 +195,7 @@ struct OverlayConfiguration : OverlayConfigurationProtocol {
     var openSegueIdentifier : String?
     var segue : UIStoryboardSegue?
     
-    var overlayTopMargin : UInt = 20
+    var overlayTopMargin : UInt = 24
     var dragSourceView : UIView?
 }
 
@@ -223,7 +229,7 @@ enum TransistionDirection {
 }
 
 //Private Typealiases
-typealias TransistorObject = protocol<TransistorProtocol, OverlayCoordinating,UIViewControllerInteractiveTransitioning>
+typealias TransistorObject = TransistorProtocol & OverlayCoordinating & UIViewControllerInteractiveTransitioning
 typealias CoordinatedTransition = (UIViewControllerTransitionCoordinatorContext) -> Void
 typealias CompletionFunc = (Bool) -> Void
 typealias VoidFunc = (Void) -> Void

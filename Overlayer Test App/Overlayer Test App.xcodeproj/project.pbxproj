@@ -7,23 +7,50 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B3A849FA1D9821EB005B05B9 /* Overlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B3D86CDC1D3A421600AEE5E5 /* Overlayer.framework */; };
+		B3A849FB1D9821EB005B05B9 /* Overlayer.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B3D86CDC1D3A421600AEE5E5 /* Overlayer.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		B3A849FD1D9821EF005B05B9 /* SwipeTabs.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B3A849F71D9821C4005B05B9 /* SwipeTabs.framework */; };
+		B3A849FE1D9821EF005B05B9 /* SwipeTabs.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B3A849F71D9821C4005B05B9 /* SwipeTabs.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B3D86CCB1D3A41EC00AEE5E5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3D86CCA1D3A41EC00AEE5E5 /* AppDelegate.swift */; };
 		B3D86CCD1D3A41EC00AEE5E5 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3D86CCC1D3A41EC00AEE5E5 /* ViewController.swift */; };
 		B3D86CD01D3A41EC00AEE5E5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B3D86CCE1D3A41EC00AEE5E5 /* Main.storyboard */; };
 		B3D86CD21D3A41EC00AEE5E5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B3D86CD11D3A41EC00AEE5E5 /* Assets.xcassets */; };
 		B3D86CD51D3A41EC00AEE5E5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B3D86CD31D3A41EC00AEE5E5 /* LaunchScreen.storyboard */; };
-		B3D86CDD1D3A421600AEE5E5 /* Overlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B3D86CDC1D3A421600AEE5E5 /* Overlayer.framework */; };
-		B3D86CDE1D3A421600AEE5E5 /* Overlayer.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B3D86CDC1D3A421600AEE5E5 /* Overlayer.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		B3A849F61D9821C4005B05B9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B3A849F11D9821C4005B05B9 /* SwipeTabs.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = B3A849521D97AD38005B05B9;
+			remoteInfo = SwipeTabs;
+		};
+		B3A849F81D9821C4005B05B9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B3A849F11D9821C4005B05B9 /* SwipeTabs.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = B3A8495B1D97AD39005B05B9;
+			remoteInfo = SwipeTabsTests;
+		};
+		B3A849FF1D9821EF005B05B9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B3A849F11D9821C4005B05B9 /* SwipeTabs.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = B3A849511D97AD38005B05B9;
+			remoteInfo = SwipeTabs;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXCopyFilesBuildPhase section */
-		B3D86CDF1D3A421600AEE5E5 /* Embed Frameworks */ = {
+		B3A849FC1D9821EB005B05B9 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				B3D86CDE1D3A421600AEE5E5 /* Overlayer.framework in Embed Frameworks */,
+				B3A849FB1D9821EB005B05B9 /* Overlayer.framework in Embed Frameworks */,
+				B3A849FE1D9821EF005B05B9 /* SwipeTabs.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -31,6 +58,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		B31209AD1D902C710086F9B6 /* Overlayer_Test_App-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Overlayer_Test_App-Bridging-Header.h"; sourceTree = "<group>"; };
+		B330ADE21D96CF1B0047ABAE /* Overlayer_Test_App-Swift.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Overlayer_Test_App-Swift.h"; sourceTree = "<group>"; };
+		B3A849F11D9821C4005B05B9 /* SwipeTabs.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SwipeTabs.xcodeproj; path = ../SwipableTabs/SwipeTabs/SwipeTabs/SwipeTabs.xcodeproj; sourceTree = "<group>"; };
 		B3D86CC71D3A41EC00AEE5E5 /* Overlayer Test App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Overlayer Test App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B3D86CCA1D3A41EC00AEE5E5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B3D86CCC1D3A41EC00AEE5E5 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -46,16 +76,27 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B3D86CDD1D3A421600AEE5E5 /* Overlayer.framework in Frameworks */,
+				B3A849FA1D9821EB005B05B9 /* Overlayer.framework in Frameworks */,
+				B3A849FD1D9821EF005B05B9 /* SwipeTabs.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		B3A849F21D9821C4005B05B9 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				B3A849F71D9821C4005B05B9 /* SwipeTabs.framework */,
+				B3A849F91D9821C4005B05B9 /* SwipeTabsTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		B3D86CBE1D3A41EC00AEE5E5 = {
 			isa = PBXGroup;
 			children = (
+				B3A849F11D9821C4005B05B9 /* SwipeTabs.xcodeproj */,
 				B3D86CDC1D3A421600AEE5E5 /* Overlayer.framework */,
 				B3D86CC91D3A41EC00AEE5E5 /* Overlayer Test App */,
 				B3D86CC81D3A41EC00AEE5E5 /* Products */,
@@ -79,6 +120,8 @@
 				B3D86CD11D3A41EC00AEE5E5 /* Assets.xcassets */,
 				B3D86CD31D3A41EC00AEE5E5 /* LaunchScreen.storyboard */,
 				B3D86CD61D3A41EC00AEE5E5 /* Info.plist */,
+				B31209AD1D902C710086F9B6 /* Overlayer_Test_App-Bridging-Header.h */,
+				B330ADE21D96CF1B0047ABAE /* Overlayer_Test_App-Swift.h */,
 			);
 			path = "Overlayer Test App";
 			sourceTree = "<group>";
@@ -93,11 +136,12 @@
 				B3D86CC31D3A41EC00AEE5E5 /* Sources */,
 				B3D86CC41D3A41EC00AEE5E5 /* Frameworks */,
 				B3D86CC51D3A41EC00AEE5E5 /* Resources */,
-				B3D86CDF1D3A421600AEE5E5 /* Embed Frameworks */,
+				B3A849FC1D9821EB005B05B9 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				B3A84A001D9821EF005B05B9 /* PBXTargetDependency */,
 			);
 			name = "Overlayer Test App";
 			productName = "Overlayer Test App";
@@ -134,12 +178,35 @@
 			mainGroup = B3D86CBE1D3A41EC00AEE5E5;
 			productRefGroup = B3D86CC81D3A41EC00AEE5E5 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = B3A849F21D9821C4005B05B9 /* Products */;
+					ProjectRef = B3A849F11D9821C4005B05B9 /* SwipeTabs.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				B3D86CC61D3A41EC00AEE5E5 /* Overlayer Test App */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		B3A849F71D9821C4005B05B9 /* SwipeTabs.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = SwipeTabs.framework;
+			remoteRef = B3A849F61D9821C4005B05B9 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		B3A849F91D9821C4005B05B9 /* SwipeTabsTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = SwipeTabsTests.xctest;
+			remoteRef = B3A849F81D9821C4005B05B9 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		B3D86CC51D3A41EC00AEE5E5 /* Resources */ = {
@@ -166,6 +233,14 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		B3A84A001D9821EF005B05B9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = SwipeTabs;
+			targetProxy = B3A849FF1D9821EF005B05B9 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin PBXVariantGroup section */
 		B3D86CCE1D3A41EC00AEE5E5 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
@@ -189,6 +264,7 @@
 		B3D86CD71D3A41EC00AEE5E5 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -210,6 +286,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEFINES_MODULE = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -239,6 +316,7 @@
 		B3D86CD81D3A41EC00AEE5E5 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -260,6 +338,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEFINES_MODULE = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -282,12 +361,19 @@
 		B3D86CDA1D3A41EC00AEE5E5 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = KPBMY72PJU;
 				INFOPLIST_FILE = "Overlayer Test App/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.andore.Overlayer-Test-App";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Overlayer Test App/Overlayer_Test_App-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
@@ -295,12 +381,18 @@
 		B3D86CDB1D3A41EC00AEE5E5 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = KPBMY72PJU;
 				INFOPLIST_FILE = "Overlayer Test App/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.andore.Overlayer-Test-App";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Overlayer Test App/Overlayer_Test_App-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Release;

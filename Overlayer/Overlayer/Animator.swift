@@ -34,23 +34,23 @@ class Animator : NSObject, UIViewControllerAnimatedTransitioning {
         
         let animations = {
             constants.presentedView.frame = constants.endingFrame
+            constants.presentedView.superview?.layoutIfNeeded()
             
             if .backwards == self.transistionDirection {
                 constants.presentedView.alpha = self.configuration.fadeInPresentationAndFadeOutDismissal ? 0.0 : 1.0
                 constants.presentedView.layer.cornerRadius = 0
-                constants.presentedView.layer.cornerRadius = 0
             } else {
                 constants.presentedView.alpha = 1.0
+                constants.presentedView.clipsToBounds = true
                 constants.presentedView.layer.cornerRadius = self.configuration.cornerRadius
-                constants.presentingView.layer.cornerRadius = self.configuration.cornerRadius
             }
             
-            constants.presentedView.layoutIfNeeded()
         }
         
         let completion : CompletionFunc = { finished in
             
             let canceled = constants.context.transitionWasCancelled
+            debugPrint("\(#function) was canceled? \(canceled)")
             constants.context.completeTransition(!canceled)
             if !canceled  {
                 self.cleanUpViewsAfterClosing(using: constants)
@@ -92,7 +92,9 @@ extension Animator {
     func returnViewsToOriginalStateAfterCancelation(using constants:AnimationConstants) {
         UIView.bounce( animation:{
             if .forwards == self.transistionDirection  {
-                constants.presentedView.alpha = self.configuration.fadeInPresentationAndFadeOutDismissal ? 0.0 : 1.0
+                constants.presentedView.alpha = 1.0
+                constants.presentedView.clipsToBounds = true
+                constants.presentedView.layer.cornerRadius = self.configuration.cornerRadius
             }
             constants.presentedView.frame = constants.startingFrame
         }, completion: { _ in
