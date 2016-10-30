@@ -170,11 +170,6 @@ private extension DraggableSegueCoordinator {
         if case .presenting(let segue) = self.state{
             if let slideDownView = (segue.destination as? Overlayer.OverlayableViewController)?.viewForDraggedDismissal {
                 let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(self.closeRecognizerDidRecognize))
-                if let gestureRecognizers = slideDownView.gestureRecognizers {
-                    for gestureRecognizer in gestureRecognizers {
-                        panGestureRecognizer.require(toFail: panGestureRecognizer )
-                    }
-                }
                 slideDownView.addGestureRecognizer(panGestureRecognizer)
             }
         }
